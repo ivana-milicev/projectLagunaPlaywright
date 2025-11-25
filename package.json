@@ -1,0 +1,23 @@
+{
+  "name": "projectlagunaplaywright",
+  "version": "1.0.0",
+  "description": "Laguna.rs automation testing with Playwright",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:chrome": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:edge": "npx playwright test --project=msedge",
+    "test:login": "npx playwright test login",
+    "test:search": "npx playwright test search",
+    "test:cart": "npx playwright test cart",
+    "test:buyflow": "npx playwright test buyFlow",
+    "report": "npx playwright show-report"
+  },
+  "keywords": ["playwright", "automation", "testing"],
+  "author": "Ivana Milicev",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
