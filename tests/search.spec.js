@@ -1,8 +1,10 @@
 const { test, expect } = require('@playwright/test');
 const SearchPage = require('../pages/SearchPage');
-const config = require('../config/config');
+const config = process.env.CI 
+  ? require('../config/config.ci')
+  : require('../config/config');
 
-test.describe('Search Tests', () => {
+test.describe('Search Tests @smoke', () => {
   let searchPage;
 
   test.beforeEach(async ({ page }) => {

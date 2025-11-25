@@ -7,9 +7,11 @@ const BuyerPage = require('../pages/BuyerPage');
 const PaymentPage = require('../pages/PaymentPage');
 const ConfirmationPage = require('../pages/ConfirmationPage');
 const CheckoutPage = require('../pages/CheckoutPage');
-const config = require('../config/config');
+const config = process.env.CI 
+  ? require('../config/config.ci')
+  : require('../config/config');
 
-test.describe('Buy Flow Test', () => {
+test.describe('Buy Flow Test @smoke', () => {
   let loginPage;
   let searchPage;
   let productPage;

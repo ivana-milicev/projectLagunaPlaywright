@@ -2,9 +2,11 @@ const { test, expect } = require('@playwright/test');
 const SearchPage = require('../pages/SearchPage');
 const ProductPage = require('../pages/ProductPage');
 const CartPage = require('../pages/CartPage');
-const config = require('../config/config');
+const config = process.env.CI 
+  ? require('../config/config.ci')
+  : require('../config/config');
 
-test.describe('Cart Tests', () => {
+test.describe('Cart Tests @smoke', () => {
   let searchPage;
   let productPage;
   let cartPage;

@@ -8,6 +8,7 @@
     "test:chrome": "npx playwright test --project=chromium",
     "test:firefox": "npx playwright test --project=firefox",
     "test:edge": "npx playwright test --project=msedge",
+    "test:smoke": "npx playwright test --grep @smoke",
     "test:login": "npx playwright test login",
     "test:search": "npx playwright test search",
     "test:cart": "npx playwright test cart",

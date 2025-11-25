@@ -1,8 +1,10 @@
 const { test, expect } = require('@playwright/test');
 const LoginPage = require('../pages/LoginPage');
-const config = require('../config/config');
+const config = process.env.CI 
+  ? require('../config/config.ci')
+  : require('../config/config');
 
-test.describe('Login Tests', () => {
+test.describe('Login Tests @smoke', () => {
   let loginPage;
 
   test.beforeEach(async ({ page }) => {
