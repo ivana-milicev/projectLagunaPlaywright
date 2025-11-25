@@ -1,4 +1,5 @@
 name: Playwright Smoke Tests
+# Workflow updated on 2025-11-25
 
 on:
   schedule:
