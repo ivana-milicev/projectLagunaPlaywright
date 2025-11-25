@@ -10,6 +10,10 @@ jobs:
   smoke-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+      CI: true
     
     steps:
       - uses: actions/checkout@v4
@@ -23,14 +27,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       
       - name: Run Smoke Tests
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-          CI: true
         run: npm run test:smoke
       
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-reportg 
           path: playwright-report/
