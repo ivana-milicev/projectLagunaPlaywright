@@ -3,12 +3,10 @@ class BasePage {
     this.page = page;
   }
 
-  // Navigation
   async navigateTo(url) {
     await this.page.goto(url);
   }
 
-  // Element actions with built-in auto-waiting
   async click(locator) {
     await this.page.locator(locator).click();
   }
@@ -40,7 +38,6 @@ class BasePage {
     return count > 0;
   }
 
-  // Waits
   async waitForVisible(locator, timeout = 20000) {
     await this.page.locator(locator).waitFor({ state: 'visible', timeout });
   }
@@ -53,7 +50,6 @@ class BasePage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  // Scrolling
   async scrollToElement(locator) {
     await this.page.locator(locator).scrollIntoViewIfNeeded();
   }
@@ -66,12 +62,10 @@ class BasePage {
     await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   }
 
-  // JavaScript execution
   async jsClick(locator) {
     await this.page.locator(locator).evaluate(element => element.click());
   }
 
-  // Dropdowns/Select
   async selectByText(locator, text) {
     await this.page.locator(locator).selectOption({ label: text });
   }
@@ -80,7 +74,6 @@ class BasePage {
     await this.page.locator(locator).selectOption(value);
   }
 
-  // Alerts/Dialogs
   async handleAlert(accept = true) {
     this.page.on('dialog', async dialog => {
       if (accept) {
@@ -91,7 +84,6 @@ class BasePage {
     });
   }
 
-  // GDPR handling
   async closeGdprIfVisible() {
     try {
       const gdprBox = this.page.locator('#gdpr-box');
@@ -104,12 +96,10 @@ class BasePage {
     }
   }
 
-  // Utility
   async sleep(milliseconds) {
     await this.page.waitForTimeout(milliseconds);
   }
 
-  // Screenshot
   async takeScreenshot(name) {
     await this.page.screenshot({ 
       path: `screenshots/${name}_${Date.now()}.png`,

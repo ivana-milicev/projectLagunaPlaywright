@@ -52,7 +52,7 @@ class BuyerPage extends BasePage {
     try {
       await this.page.locator(this.nextButton).scrollIntoViewIfNeeded();
     } catch (error) {
-      console.log('Scroll error, continuing anyway:', error.message);
+      // Scroll error, continuing anyway
     }
     
     await this.sleep(500);
@@ -60,7 +60,6 @@ class BuyerPage extends BasePage {
     try {
       await this.jsClick(this.nextButton);
     } catch (error) {
-      console.log('JS click failed, trying regular click:', error.message);
       await this.click(this.nextButton);
     }
   }

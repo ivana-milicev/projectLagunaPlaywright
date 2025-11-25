@@ -34,7 +34,6 @@ class CartPage extends BasePage {
       await this.scrollToElement(this.removeProductButton);
       await this.click(this.removeProductButton);
     } catch (error) {
-      console.log('Remove button not found, trying alternative locator...');
       await this.click('xpath=//a[contains(text(),"Brisanje")]');
     }
   }
