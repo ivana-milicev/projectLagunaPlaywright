@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const LoginPage = require('../pages/LoginPage');
 const SearchPage = require('../pages/SearchPage');
 const ProductPage = require('../pages/ProductPage');
 const CartPage = require('../pages/CartPage');
@@ -12,7 +11,6 @@ const config = process.env.CI
   : require('../config/config');
 
 test.describe('Buy Flow Test @smoke', () => {
-  let loginPage;
   let searchPage;
   let productPage;
   let cartPage;
@@ -22,7 +20,6 @@ test.describe('Buy Flow Test @smoke', () => {
   let checkoutPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     searchPage = new SearchPage(page);
     productPage = new ProductPage(page);
     cartPage = new CartPage(page);
@@ -37,9 +34,6 @@ test.describe('Buy Flow Test @smoke', () => {
   test('Complete buy flow test', async ({ page }) => {
     test.setTimeout(180000);
     
-    await loginPage.login(config.validEmail, config.validPassword);
-    await page.waitForTimeout(2000);
-
     await searchPage.search(config.searchInput);
     await page.waitForTimeout(2000);
     

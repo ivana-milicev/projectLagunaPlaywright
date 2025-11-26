@@ -1,6 +1,6 @@
 module.exports = {
-  validEmail: process.env.TEST_EMAIL || 'test@example.com',
-  validPassword: process.env.TEST_PASSWORD || 'test_password',
+  validEmail: process.env.TEST_EMAIL || 'ivanans90@hotmail.com',
+  validPassword: process.env.TEST_PASSWORD || 'vIcxes-hicqar-3safzi',
   
   invalidEmail: 'invalid@example.com',
   invalidPassword: 'wrongpassword',
