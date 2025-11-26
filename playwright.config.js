@@ -36,7 +36,7 @@ module.exports = defineConfig({
     baseURL: 'https://laguna.rs/',
     
     // Browser options
-    headless: false,
+    headless: process.env.CI ? true : false,
     viewport: { width: 1280, height: 720 },
     
     // Collect trace on failure
