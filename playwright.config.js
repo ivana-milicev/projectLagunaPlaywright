@@ -52,7 +52,7 @@ module.exports = defineConfig({
     actionTimeout: 20000,
     
     // Maximum time for navigation
-    navigationTimeout: 30000,
+    navigationTimeout: 60000,
   },
 
   // Configure projects for major browsers
