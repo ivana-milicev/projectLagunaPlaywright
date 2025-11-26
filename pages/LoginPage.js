@@ -16,15 +16,23 @@ class LoginPage extends BasePage {
     await this.type(this.emailInputField, email);
     await this.type(this.passwordInputField, password);
     await this.click(this.submitButton);
-    await this.sleep(1000);
+    
+    // Wait for login response (either success or failure)
+    // Give it time to process the login attempt
+    await this.page.waitForTimeout(2000);
   }
 
   async isLoginSuccessful() {
+    // Wait up to 5 seconds for the logout button to appear
     return await this.isVisible(this.loginProof);
   }
 
   async isLoginFailed() {
-    await this.sleep(500);
+    // Wait for the page to process the login attempt
+    // The login button should still be visible if login failed
+    await this.page.waitForTimeout(1000);
+    
+    // Check if login button is still visible (indicating failed login)
     return await this.isVisible(this.loginButton);
   }
 }

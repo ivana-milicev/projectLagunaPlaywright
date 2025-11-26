@@ -16,7 +16,8 @@ class ProductPage extends BasePage {
 
   async addToCart() {
     await this.click(this.addToCartButton);
-    await this.sleep(2000);
+    // Small wait for the cart update animation/request
+    await this.page.waitForTimeout(1000);
   }
 
   async clickOnCartButton() {
@@ -25,8 +26,6 @@ class ProductPage extends BasePage {
 
   async getCartCount() {
     try {
-      await this.sleep(500);
-      
       const countText = await this.getText(this.cartBadgeNumber);
       const trimmedText = countText.trim();
       
@@ -46,8 +45,35 @@ class ProductPage extends BasePage {
   }
 
   async wasItemAddedToCart(expectedCount) {
-    const actualCount = await this.getCartCount();
-    return actualCount === expectedCount;
+    // Use Playwright's expect with polling - BEST PRACTICE
+    // This will automatically retry until the condition is met or timeout
+    try {
+      await this.page.waitForFunction(
+        async (args) => {
+          const badge = document.querySelector(args.selector);
+          if (!badge) return false;
+          
+          const text = badge.textContent.trim();
+          let count = 0;
+          
+          if (text.includes('(') && text.includes(')')) {
+            const match = text.match(/\((\d+)\)/);
+            count = match ? parseInt(match[1]) : 0;
+          } else if (/^\d+$/.test(text)) {
+            count = parseInt(text);
+          }
+          
+          return count === args.expectedCount;
+        },
+        { selector: this.cartBadgeNumber, expectedCount },
+        { timeout: 10000 } // Wait up to 10 seconds
+      );
+      return true;
+    } catch {
+      // If timeout, do final check
+      const finalCount = await this.getCartCount();
+      return finalCount === expectedCount;
+    }
   }
 }
 
