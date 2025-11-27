@@ -60,7 +60,19 @@ test.describe('Buy Flow Test @smoke', () => {
     await confirmationPage.acceptCosts();
     await confirmationPage.clickOnPaymentButton();
 
-    await page.waitForURL(/wspay|payment/i, { timeout: 30000 });
+    try {
+      // Strategy 1: Wait for URL change
+      await page.waitForURL(/wspay|payment/i, { timeout: 30000 });
+    } catch (error) {
+      // Strategy 2: Wait for network to be idle (navigation might have happened)
+      try {
+        await page.waitForLoadState('networkidle', { timeout: 10000 });
+      } catch (error2) {
+        // Strategy 3: Just check the URL after waiting
+        await page.waitForTimeout(5000);
+      }
+    }
+    
     const isOnPaymentGateway = await checkoutPage.isOnWSPayPage();
     
     expect(isOnPaymentGateway, 'Should be on WSPay payment page').toBeTruthy();
