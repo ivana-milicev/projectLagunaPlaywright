@@ -23,45 +23,29 @@ class BuyerPage extends BasePage {
   }
 
   async fillBuyerData(name, email, country, phone, street, streetNumber, city) {
-    await this.sleep(500);
-    
     await this.type(this.nameInputField, name);
     await this.type(this.emailInputField, email);
     
     await this.click(this.countryDropdown);
-    await this.sleep(300);
-    await this.click(this.countryOptionLocator(country));
-    await this.sleep(300);
-    
+    const countryOption = this.countryOptionLocator(country);
+    await this.page.locator(countryOption).waitFor({ state: 'visible' });
+    await this.click(countryOption);
+  
     await this.type(this.telephoneInputField, phone);
     await this.type(this.streetInputField, street);
     await this.type(this.streetNumberInputField, streetNumber);
-    
+  
     await this.click(this.cityDropdown);
-    await this.sleep(300);
-    await this.click(this.cityOptionLocator(city));
-    await this.sleep(300);
+    const cityOption = this.cityOptionLocator(city);
+    await this.page.locator(cityOption).waitFor({ state: 'visible' });
+    await this.click(cityOption);
   }
 
   async clickOnNextButton() {
     await this.closeGdprIfVisible();
-    await this.sleep(500);
-    
-    await this.page.locator(this.nextButton).waitFor({ state: 'visible', timeout: 10000 });
-    
-    try {
-      await this.page.locator(this.nextButton).scrollIntoViewIfNeeded();
-    } catch (error) {
-      // Scroll error, continuing anyway
-    }
-    
-    await this.sleep(500);
-    
-    try {
-      await this.jsClick(this.nextButton);
-    } catch (error) {
-      await this.click(this.nextButton);
-    }
+    await this.waitForVisible(this.nextButton, 10000);
+    await this.scrollToElement(this.nextButton);
+    await this.click(this.nextButton);
   }
 }
 

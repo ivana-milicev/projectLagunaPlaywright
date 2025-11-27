@@ -12,7 +12,6 @@ class BasePage {
   }
 
   async fill(locator, text) {
-    await this.page.locator(locator).clear();
     await this.page.locator(locator).fill(text);
   }
 

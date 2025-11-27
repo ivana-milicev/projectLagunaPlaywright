@@ -32,20 +32,15 @@ test.describe('Buy Flow Test @smoke', () => {
   });
 
   test('Complete buy flow test', async ({ page }) => {
-    test.setTimeout(180000);
+    test.setTimeout(120000);
     
     await searchPage.search(config.searchInput);
-    await page.waitForTimeout(2000);
-    
     await searchPage.selectProduct(config.productTitle);
-    await page.waitForTimeout(2000);
 
     await productPage.addToCart();
     await productPage.clickOnCartButton();
-    await page.waitForTimeout(2000);
 
     await cartPage.clickOnNextButton();
-    await page.waitForTimeout(3000);
 
     await buyerPage.fillBuyerData(
       config.buyer.name,
@@ -56,64 +51,18 @@ test.describe('Buy Flow Test @smoke', () => {
       config.buyer.streetNumber,
       config.buyer.city
     );
-    
-    await page.waitForTimeout(1000);
-    
-    try {
-      await buyerPage.clickOnNextButton();
-      await page.waitForTimeout(3000);
-    } catch (error) {
-      await page.locator('#nastaviDalje').click({ force: true });
-      await page.waitForTimeout(3000);
-    }
+    await buyerPage.clickOnNextButton();
 
-    await page.waitForTimeout(2000);
     await paymentPage.clickOnCreditCard();
-    await page.waitForTimeout(1000);
     await paymentPage.clickOnNextButton();
-    await page.waitForTimeout(3000);
 
-    await page.waitForTimeout(2000);
-    
-    await page.evaluate(() => {
-      const terms = document.querySelector('#potvrda');
-      const costs = document.querySelector('#potvrda2');
-      if (terms) {
-        terms.checked = true;
-        terms.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-      if (costs) {
-        costs.checked = true;
-        costs.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
-    
-    await page.waitForTimeout(1000);
-    
-    try {
-      const navigationPromise = page.waitForURL(/wspay|payment/i, { timeout: 30000 }).catch(() => null);
-      
-      const paymentButton = page.locator('xpath=//*[text()="Plaćanje"]');
-      await paymentButton.waitFor({ state: 'visible', timeout: 10000 });
-      await paymentButton.click({ timeout: 10000 });
-      
-      await navigationPromise;
-      await page.waitForTimeout(3000);
-      
-    } catch (error) {
-      try {
-        await page.evaluate(() => {
-          const buttons = Array.from(document.querySelectorAll('*'));
-          const paymentBtn = buttons.find(el => el.textContent && el.textContent.trim() === 'Plaćanje');
-          if (paymentBtn) paymentBtn.click();
-        });
-        await page.waitForTimeout(5000);
-      } catch (jsError) {
-      }
-    }
+    await confirmationPage.acceptTerms();
+    await confirmationPage.acceptCosts();
+    await confirmationPage.clickOnPaymentButton();
 
-    const currentUrl = page.url();
-    const isOnPaymentGateway = currentUrl.includes('wspay') || currentUrl.includes('payment');
-    expect(isOnPaymentGateway, `Should be on WSPay payment page. Current URL: ${currentUrl}`).toBeTruthy();
+    await page.waitForURL(/wspay|payment/i, { timeout: 30000 });
+    const isOnPaymentGateway = await checkoutPage.isOnWSPayPage();
+    
+    expect(isOnPaymentGateway, 'Should be on WSPay payment page').toBeTruthy();
   });
 });

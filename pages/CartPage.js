@@ -5,7 +5,7 @@ class CartPage extends BasePage {
     super(page);
     
     this.nextButton = 'xpath=//*[text()="Dalje"]';
-    this.removeProductButton = 'xpath=//*[contains(text(),"Brisanje")]';
+    this.removeProductButton = 'xpath=//a[contains(@class, "korpa-brisanje")]';
     this.okButton = 'xpath=//*[text()="OK"]';
     this.emptyCartMessage = '.cart-empty, .empty-msg';
   }
@@ -20,38 +20,33 @@ class CartPage extends BasePage {
 
   async clickOnNextButton() {
     await this.closeGdprIfVisible();
-    await this.sleep(500);
     await this.scrollToElement(this.nextButton);
     await this.click(this.nextButton);
   }
 
   async removeFromCart() {
     await this.closeGdprIfVisible();
-    await this.sleep(500);
     
     try {
       await this.page.locator(this.removeProductButton).waitFor({ state: 'visible', timeout: 10000 });
       await this.scrollToElement(this.removeProductButton);
       await this.click(this.removeProductButton);
     } catch (error) {
-      await this.click('xpath=//a[contains(text(),"Brisanje")]');
+      await this.click(this.removeProductButton);
     }
   }
 
   async clickOkToRemove() {
-    await this.sleep(300);
+    await this.waitForVisible(this.okButton);
     await this.click(this.okButton);
   }
 
   async isProductRemoved(productName) {
     try {
-      await this.sleep(1000);
-      await this.waitForHidden(this.productTitleLocator(productName));
-      const productStillExists = await this.isPresent(this.productTitleLocator(productName));
-      return !productStillExists;
+      await this.waitForHidden(this.productTitleLocator(productName), 5000);
+      return true;
     } catch {
-      const productStillExists = await this.isPresent(this.productTitleLocator(productName));
-      return !productStillExists;
+      return false;
     }
   }
 }
